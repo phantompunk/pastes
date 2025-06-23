@@ -3,8 +3,15 @@ package models
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"time"
 )
+
+type SnippetModelInterface interface {
+	Insert(title string, content string, expires int) (int, error)
+	Get(id int) (Snippet, error)
+	Latest() ([]Snippet, error)
+}
 
 type Snippet struct {
 	ID      int
@@ -41,6 +48,7 @@ func (m *SnippetModel) Get(id int) (Snippet, error) {
 
 	row := m.DB.QueryRow(stmt, id)
 
+	fmt.Print("Real impl")
 	var s Snippet
 	err := row.Scan(&s.ID, &s.Title, &s.Content, &s.Created, &s.Expires)
 	if err != nil {
